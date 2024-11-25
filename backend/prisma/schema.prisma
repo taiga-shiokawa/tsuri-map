@@ -1,0 +1,113 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
+// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "mongodb"
+  url      = env("DATABASE_URL")
+}
+
+// ユーザーモデル
+model User {
+  id            String       @id @default(auto()) @map("_id") @db.ObjectId
+  name          String       @unique
+  about         String?
+  status        Status?
+  socialLinks   SocialLinks?
+  email         String       @unique
+  password      String
+  age           String
+  gender        Gender
+  createdAt     DateTime     @default(now())
+  updatedAt     DateTime     @updatedAt
+
+  // リレーション
+  fishingPosts  FishingPost[] // ユーザーの投稿
+  savedPosts    SavedPost[]   // 保存した投稿
+}
+
+// 性別の列挙型
+enum Gender {
+  male
+  female
+  other
+}
+
+enum Status {
+  bronze    /// 投稿数 0-9の初心者ユーザー
+  silver    /// 投稿数 10-49の一般ユーザー
+  gold      /// 投稿数 50-99のアクティブユーザー
+  platinum  /// 投稿数 100以上の熟練ユーザー
+}
+
+enum SocialLinks {
+  facebook
+  instagram
+  x
+}
+
+// 釣果情報モデル
+model FishingPost {
+  id            String       @id @default(auto()) @map("_id") @db.ObjectId
+  locationName  String      // 場所の名前
+  location      Location    // 位置情報（緯度・経度）
+  fishingDate   DateTime    // 釣った日
+  weather       Weather     // 天気
+  fishName      String      // 魚の名前
+  description   String?     // 詳細情報（オプショナル）
+  createdAt     DateTime    @default(now())
+  updatedAt     DateTime    @updatedAt
+
+  // リレーション
+  userId        String      @db.ObjectId
+  user          User        @relation(fields: [userId], references: [id])
+  savedBy       SavedPost[] // この投稿を保存したユーザー
+  photos        Photo[]     // 釣果の写真
+}
+
+// 位置情報の型
+type Location {
+  latitude    Float
+  longitude   Float
+}
+
+// 天気の列挙型
+enum Weather {
+  sunny
+  cloudy
+  rainy
+  stormy
+  snowy
+}
+
+// 保存された投稿モデル
+model SavedPost {
+  id            String     @id @default(auto()) @map("_id") @db.ObjectId
+  userId        String     @db.ObjectId
+  fishingPostId String     @db.ObjectId
+  savedAt       DateTime   @default(now())
+
+  // リレーション
+  user          User       @relation(fields: [userId], references: [id])
+  fishingPost   FishingPost @relation(fields: [fishingPostId], references: [id])
+
+  // ユニーク制約
+  @@unique([userId, fishingPostId])
+}
+
+// 写真モデル
+model Photo {
+  id            String     @id @default(auto()) @map("_id") @db.ObjectId
+  url           String
+  fishingPostId String     @db.ObjectId
+  createdAt     DateTime   @default(now())
+
+  // リレーション
+  fishingPost   FishingPost @relation(fields: [fishingPostId], references: [id])
+}
