@@ -7,8 +7,8 @@ export const getPosts = async (req, res) => {
     const posts = await prisma.fishingPost.findMany({
       include: {
         user: true,
-        photos: true
-      }
+        photos: true,
+      },
     });
     return res.status(200).json(posts);
   } catch (error) {
@@ -24,8 +24,8 @@ export const getPost = async (req, res) => {
       where: { id: postId },
       include: {
         user: true,
-        photos: true
-      }
+        photos: true,
+      },
     });
     return res.status(200).json(post);
   } catch (error) {
@@ -49,8 +49,8 @@ const upload = multer({
   storage: multer.memoryStorage(),
   limits: {
     fileSize: 5 * 1024 * 1024,
-  }
-}).array('photos', 3);
+  },
+}).array("photos", 3);
 
 export const createPost = async (req, res) => {
   try {
@@ -65,6 +65,7 @@ export const createPost = async (req, res) => {
         longitude,
         fishingDate,
         weather,
+        fishingType,
         fishName,
         description,
       } = req.body;
@@ -83,8 +84,10 @@ export const createPost = async (req, res) => {
             const url = await uploadToCloudinary(file);
             photoUrls.push({ url });
           } catch (error) {
-            console.error('画像アップロードエラー:', error);
-            return res.status(500).json({ message: "画像のアップロードに失敗しました" });
+            console.error("画像アップロードエラー:", error);
+            return res
+              .status(500)
+              .json({ message: "画像のアップロードに失敗しました" });
           }
         }
       }
@@ -98,12 +101,13 @@ export const createPost = async (req, res) => {
           },
           fishingDate: new Date(fishingDate),
           weather,
+          fishingType,
           fishName,
           description,
           user: {
             connect: {
-              id: userId
-            }
+              id: userId,
+            },
           },
           photos: {
             create: photoUrls,
@@ -155,7 +159,9 @@ export const deletePost = async (req, res) => {
 
     // 投稿の所有者チェック
     if (post.userId !== userId) {
-      return res.status(403).json({ message: "この投稿を削除する権限がありません" });
+      return res
+        .status(403)
+        .json({ message: "この投稿を削除する権限がありません" });
     }
 
     // 写真の削除処理
@@ -165,11 +171,11 @@ export const deletePost = async (req, res) => {
         try {
           await deleteFromCloudinary(photo.url);
         } catch (error) {
-          console.error('画像削除エラー:', error);
+          console.error("画像削除エラー:", error);
           // 画像削除エラーはログに記録するが、処理は継続する
         }
       }
-      
+
       // 写真のレコードを削除
       await prisma.photo.deleteMany({
         where: {
@@ -186,9 +192,72 @@ export const deletePost = async (req, res) => {
     });
 
     return res.status(200).json({ message: "投稿を削除しました" });
-
   } catch (error) {
     console.log(error);
     return res.status(500).json({ message: "投稿の削除に失敗しました" });
+  }
+};
+
+export const searchPost = async (req, res) => {
+  const { search } = req.query;
+
+  try {
+    if (!search || search.trim() === "") {
+      const allPost = await prisma.fishingPost.findMany({
+        include: {
+          user: {
+            select: {
+              id: true,
+              name: true,
+            },
+          },
+          photos: true,
+        },
+      });
+      return res.status(200).json(allPost);
+    }
+
+    const posts = await prisma.fishingPost.findMany({
+      where: {
+        OR: [
+          {
+            locationName: {
+              contains: search,
+              mode: "insensitive", // 大文字小文字を区別しない
+            },
+          },
+          {
+            fishName: {
+              contains: search,
+              mode: "insensitive",
+            },
+          },
+          {
+            description: {
+              contains: search,
+              mode: "insensitive",
+            },
+          },
+        ],
+      },
+      include: {
+        user: {
+          select: {
+            id: true,
+            name: true,
+          },
+        },
+        photos: true,
+      },
+      orderBy: {
+        createdAt: "desc", // 新しい投稿から順に表示
+      },
+    });
+
+    return res.status(200).json(posts);
+
+  } catch (error) {
+    console.log(error);
+    return res.status(500).json({ message: "投稿の検索に失敗しました" });
   }
 };

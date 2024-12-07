@@ -1,5 +1,6 @@
 import { Marker, Popup } from "react-leaflet";
 import WeatherDisplay from "../../utils/WeatherDisplay";
+import FishingTypeDisplay from "../../utils/FishingTypeDisplay";
 
 const Pin = ({item}) => {
   if (!item || !item.location) return null;
@@ -22,6 +23,7 @@ const Pin = ({item}) => {
           </h3>
           <p>魚種: {item.fishName}</p>
           <WeatherDisplay weather={item.weather} />
+          <p className="mb-3"><FishingTypeDisplay fishingType={item.fishingType} /></p>
           <p>日時: {new Date(item.fishingDate).toLocaleDateString()}</p>
           {item.description && (
             <p className="mt-1">{item.description}</p>

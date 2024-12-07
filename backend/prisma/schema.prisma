@@ -59,6 +59,7 @@ model FishingPost {
   location      Location    // 位置情報（緯度・経度）
   fishingDate   DateTime    // 釣った日
   weather       Weather     // 天気
+  fishingType   FishingType // 釣りの種類
   fishName      String      // 魚の名前
   description   String?     // 詳細情報（オプショナル）
   createdAt     DateTime    @default(now())
@@ -69,6 +70,13 @@ model FishingPost {
   user          User        @relation(fields: [userId], references: [id])
   savedBy       SavedPost[] // この投稿を保存したユーザー
   photos        Photo[]     // 釣果の写真
+}
+
+// 釣りの種類
+enum FishingType {
+  floatFishing  // フカセ釣り
+  lure          // ルアー
+  casting       // 打ち込み
 }
 
 // 位置情報の型

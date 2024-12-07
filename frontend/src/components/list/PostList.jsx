@@ -3,9 +3,22 @@ import PostCard from "../card/PostCard";
 const PostList = ({items}) => {
   return (
     <div className="space-y-4 overflow-auto h-screen">
-      {items.map(item => (
-        <PostCard item={item} key={item.id}/>
-      ))}
+      {items.length === 0 ? (
+        <div className="text-center py-8">
+          <p className="text-gray-500">投稿が見つかりませんでした</p>
+        </div>
+      ) : (
+        <>
+          <div className="mb-4 p-2 bg-blue-50 rounded-lg">
+            <p className="text-blue-600">
+              {items.length}件の投稿が見つかりました
+            </p>
+          </div>
+          {items.map(item => (
+            <PostCard item={item} key={item.id}/>
+          ))}
+        </>
+      )}
     </div>
   );
 };

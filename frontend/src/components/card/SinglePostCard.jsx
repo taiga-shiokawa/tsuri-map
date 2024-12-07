@@ -4,6 +4,7 @@ import UserInfo from "./UserInfo"
 import { AuthContext } from "../../context/AuthContext"
 import { useNavigate } from "react-router-dom" // useNavigateを追加
 import apiRequest from "../../lib/apiRequest"
+import FishingTypeDisplay from "../../utils/FishingTypeDisplay"
 
 const SinglePostCard = ({item}) => {
   const { currentUser } = useContext(AuthContext); // currentUserを直接取得
@@ -57,6 +58,7 @@ const SinglePostCard = ({item}) => {
         <div>
           <p className="mb-3">場所: {item.locationName}</p>
           <p className="mb-3"><WeatherDisplay weather={item.weather} /></p>
+          <p className="mb-3"><FishingTypeDisplay fishingType={item.fishingType} /></p>
           <p className="mb-3">日時: {new Date(item.fishingDate).toLocaleDateString()}</p>
           <p>詳細: {item.description}</p>
         </div>

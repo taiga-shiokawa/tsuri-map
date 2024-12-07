@@ -6,6 +6,7 @@ import LoginPage from "./pages/auth/LoginPage"
 import PostDetails from "./pages/PostDetails"
 import ProfilePage from "./pages/ProfilePage"
 import ProfileEditPage from "./pages/ProfileEditPage"
+import NotFoundPage from "./pages/NotFoundPage"
 
 function App() {
   const router = createBrowserRouter([
@@ -29,6 +30,10 @@ function App() {
         {
           path: "/posts/:id",
           element: <PostDetails />
+        },
+        {
+          path: "/*",
+          element: <NotFoundPage />
         }
       ]
     },

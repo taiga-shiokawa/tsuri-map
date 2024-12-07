@@ -11,16 +11,20 @@ import {
   DialogDescription,
 } from "../components/ui/dialog";
 import { AuthContext } from "../context/AuthContext";
+import { useLocation } from "react-router-dom";
+import LocationPickerMap from "../components/map/LocationPickerMap";
 
 const HomePage = () => {
+  const location = useLocation();
   const user = useContext(AuthContext);
   const [posts, setPosts] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
   const [isOpen, setIsOpen] = useState(false);
   const [latitude, setLatitude] = useState("");
   const [longitude, setLongitude] = useState("");
+  const [isMapView, setIsMapView] = useState(false);
 
-  // 投稿を取得する関数を別途定義
+  // 投稿を取得する関数
   const fetchPosts = async () => {
     setIsLoading(true);
     try {
@@ -35,33 +39,20 @@ const HomePage = () => {
   };
 
   useEffect(() => {
-    fetchPosts();
-  }, []);
-
-  useEffect(() => {
-    const fetchPosts = async () => {
-      try {
-        const res = await apiRequest.get("/posts");
-        setPosts(res.data);
-        console.log(res.data);
-      } catch (error) {
-        console.log(error);
-        toast.error(
-          error.response?.data?.message || "投稿の取得に失敗しました"
-        );
-      } finally {
-        setIsLoading(false);
-      }
-    };
-
-    fetchPosts();
-  }, []);
+    if (location.state) {
+      // 検索結果がある場合はそれを表示
+      setPosts(location.state);
+      // 検索結果をクリア（次回の更新のため）
+      window.history.replaceState({}, document.title);
+    } else {
+      // 検索結果がない場合は通常の投稿を取得
+      fetchPosts();
+    }
+  }, [location]);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
     const formData = new FormData(e.target);
-
-    console.log("投稿データ: ", formData);
 
     const fileInput = e.target.querySelector('input[type="file"]');
     const files = fileInput.files;
@@ -81,6 +72,10 @@ const HomePage = () => {
       await fetchPosts();
       setIsOpen(false);
       e.target.reset();
+      // フォームの状態をリセット
+      setLatitude("");
+      setLongitude("");
+      setIsMapView(false);
     } catch (error) {
       console.log(error);
       toast.error(error.response?.data?.message || "投稿の作成に失敗しました");
@@ -90,7 +85,7 @@ const HomePage = () => {
   const getCurrentLocation = async (e) => {
     e.preventDefault();
     if (!navigator.geolocation) {
-      alert("この端末では現在地を取得できません");
+      alert("この端末では現在地を取得できません");
       return;
     }
 
@@ -104,8 +99,14 @@ const HomePage = () => {
 
       toast.success("現在地を取得しました");
     } catch (error) {
-      alert("現在地を取得できませんでした" + error.message);
+      alert("現在地を取得できませんでした" + error.message);
     }
+  };
+
+  const handleLocationSelect = ({ latitude, longitude }) => {
+    setLatitude(latitude);
+    setLongitude(longitude);
+    toast.success("位置情報を設定しました");
   };
 
   if (isLoading) {
@@ -118,7 +119,7 @@ const HomePage = () => {
 
   return (
     <>
-    <Toaster position="top-center" />
+      <Toaster position="top-center" />
       <div className="min-h-screen bg-gray-100">
         <div className="mx-auto max-w-7xl">
           <div className="flex">
@@ -170,24 +171,44 @@ const HomePage = () => {
                         placeholder="釣った場所"
                         className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none transition-shadow"
                       />
-                      <button
-                        onClick={getCurrentLocation}
-                        className="px-6 py-2 bg-blue-500 text-white rounded-lg hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 transition-colors duration-200"
-                      >
-                        位置情報を取得する
-                      </button>
+                      <div className="flex flex-col space-y-4">
+                        <div className="flex space-x-2">
+                          <button
+                            onClick={getCurrentLocation}
+                            type="button"
+                            className="px-6 py-2 bg-blue-500 text-white rounded-lg hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 transition-colors duration-200"
+                          >
+                            現在地を取得する
+                          </button>
+                          <button
+                            onClick={(e) => {
+                              e.preventDefault();
+                              setIsMapView(!isMapView);
+                            }}
+                            type="button"
+                            className="px-6 py-2 bg-green-500 text-white rounded-lg hover:bg-green-600 focus:outline-none focus:ring-2 focus:ring-green-500 focus:ring-offset-2 transition-colors duration-200"
+                          >
+                            {isMapView ? "地図を閉じる" : "地図から選択する"}
+                          </button>
+                        </div>
+                        {isMapView && (
+                          <LocationPickerMap
+                            onLocationSelect={handleLocationSelect}
+                            selectedPosition={latitude && longitude ? { latitude, longitude } : null}
+                          />
+                        )}
+                      </div>
                       <input
                         type="hidden"
                         name="latitude"
                         value={latitude}
-                        onChange={(e) => setLatitude(e.target.value)}
                       />
                       <input
                         type="hidden"
                         name="longitude"
                         value={longitude}
-                        onChange={(e) => setLongitude(e.target.value)}
                       />
+                      {/* 残りのフォームフィールド */}
                       <input
                         type="date"
                         name="fishingDate"
@@ -204,6 +225,15 @@ const HomePage = () => {
                         <option value="rainy">雨</option>
                         <option value="stormy">強風</option>
                         <option value="snowy">雪</option>
+                      </select>
+                      <select
+                        name="fishingType"
+                        id="fishingType"
+                        className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none transition-shadow"
+                      >
+                        <option value="floatFishing">フカセ釣り</option>
+                        <option value="lure">ルアー</option>
+                        <option value="casting">打ち込み</option>
                       </select>
                       <input
                         type="text"

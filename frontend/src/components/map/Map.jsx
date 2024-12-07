@@ -1,12 +1,22 @@
-import { MapContainer, TileLayer } from "react-leaflet"
+import { MapContainer, TileLayer, useMapEvents } from "react-leaflet";
 import 'leaflet/dist/leaflet.css';
 import Pin from "../pin/Pin";
 
-const Map = ({items = []}) => {
-  // デフォルトの位置（例：日本の中心あたり）
+// クリックイベントを処理するための新しいコンポーネント
+const LocationMarker = ({ onLocationSelect }) => {
+  useMapEvents({
+    click(e) {
+      const { lat, lng } = e.latlng;
+      onLocationSelect({ latitude: lat, longitude: lng });
+    },
+  });
+
+  return null;
+};
+
+const Map = ({ items = [], onLocationSelect, isSelectingLocation = false }) => {
   const defaultPosition = [24.8055, 125.2811];
   
-  // items が空でない場合のみ、最初の投稿の位置を使用
   const position = items && items.length > 0 && items[0].location
     ? [items[0].location.latitude, items[0].location.longitude]
     : defaultPosition;
@@ -26,6 +36,7 @@ const Map = ({items = []}) => {
         {items.map(item => (
           <Pin item={item} key={item.id} />
         ))}
+        {isSelectingLocation && <LocationMarker onLocationSelect={onLocationSelect} />}
       </MapContainer>
     </div>
   );
