@@ -3,20 +3,21 @@ import ProfileCard from "../components/card/ProfileCard";
 import { AuthContext } from "../context/AuthContext";
 import { useNavigate } from "react-router-dom";
 import Map from "../components/map/Map";
-import PostList from "../components/list/PostList";
 import toast, { Toaster } from "react-hot-toast";
 import apiRequest from "../lib/apiRequest";
+import MyPostList from "../components/list/MyPostList";
 
 const ProfilePage = () => {
   const { currentUser, updateUser, fishingPosts } = useContext(AuthContext);
   const navigate = useNavigate();
-  const [isLoading, setIsLoading] = useState(true);
   const [posts, setPosts] = useState([]);
+  const [isLoading, setIsLoading] = useState(true);
 
   const fetchPosts = async () => {
     setIsLoading(true);
     try {
-      const res = await apiRequest.get("/posts");
+      const res = await apiRequest.get("/posts/myPosts");
+      console.log("my-posts", res.data);
       setPosts(res.data);
     } catch (error) {
       console.log(error);
@@ -84,7 +85,7 @@ const ProfilePage = () => {
                   }}
                 />
               </div>
-              <PostList items={posts} />
+              <MyPostList items={posts} />
             </div>
             <div className="w-full md:w-3/6 p-4 overflow-auto h-screen">
               <Map items={fishingPosts} />

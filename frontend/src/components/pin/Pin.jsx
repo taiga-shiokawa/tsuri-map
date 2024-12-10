@@ -26,7 +26,7 @@ const Pin = ({item}) => {
           <p className="mb-3"><FishingTypeDisplay fishingType={item.fishingType} /></p>
           <p>日時: {new Date(item.fishingDate).toLocaleDateString()}</p>
           {item.description && (
-            <p className="mt-1">{item.description}</p>
+            <p className="mt-1">詳細: {item.description}</p>
           )}
         </div>
       </Popup>

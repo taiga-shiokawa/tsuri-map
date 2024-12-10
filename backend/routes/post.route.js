@@ -3,6 +3,7 @@ import {
   createPost,
   deletePost,
   editPost,
+  getMyPosts,
   getPost,
   getPosts,
   getSavedPosts,
@@ -14,6 +15,7 @@ const router = express.Router();
 
 router.get("/", getPosts);
 router.get("/search", searchPost);
+router.get("/myPosts", verifyToken, getMyPosts);
 router.get("/:id", getPost);
 router.get("/:id", verifyToken, getSavedPosts);
 router.post("/create", verifyToken, createPost);

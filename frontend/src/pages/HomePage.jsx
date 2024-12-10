@@ -172,6 +172,7 @@ const HomePage = () => {
                         className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none transition-shadow"
                       />
                       <div className="flex flex-col space-y-4">
+                        <p>位置情報</p>
                         <div className="flex space-x-2">
                           <button
                             onClick={getCurrentLocation}

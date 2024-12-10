@@ -7,6 +7,9 @@ import PostDetails from "./pages/PostDetails"
 import ProfilePage from "./pages/ProfilePage"
 import ProfileEditPage from "./pages/ProfileEditPage"
 import NotFoundPage from "./pages/NotFoundPage"
+import ForgetPassword from "./pages/ForgetPassword"
+import SetNewPasswordPage from "./pages/SetNewPasswordPage"
+import EmailSentConfirmation from "./components/info/EmailSentConfirmation"
 
 function App() {
   const router = createBrowserRouter([
@@ -30,6 +33,18 @@ function App() {
         {
           path: "/posts/:id",
           element: <PostDetails />
+        },
+        {
+          path: "/forgot-password",
+          element: <ForgetPassword />
+        },
+        {
+          path: "/password-reset/:token",
+          element: <SetNewPasswordPage />
+        },
+        {
+          path: "/email-sent-confirmation",
+          element: <EmailSentConfirmation />
         },
         {
           path: "/*",

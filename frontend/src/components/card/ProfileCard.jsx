@@ -1,5 +1,6 @@
 import { Link } from "react-router-dom";
 import UserStatus from "../../utils/UserStatus";
+import MaleOrFemale from "../ui/MaleOrFemale";
 
 const ProfileCard = ({user}) => {
 
@@ -27,7 +28,7 @@ const ProfileCard = ({user}) => {
       {/* プロフィール画像 */}
       <div className="flex justify-center mb-4">
         <div className="w-32 h-32 bg-sky-200 rounded-full">
-          <img src="male.png" alt="メンズ画像" className="w-full h-full text-gray-300" />
+          <MaleOrFemale />
         </div>
       </div>
 

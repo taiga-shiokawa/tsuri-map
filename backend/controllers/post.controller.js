@@ -9,11 +9,35 @@ export const getPosts = async (req, res) => {
         user: true,
         photos: true,
       },
+      orderBy: {
+        createdAt: "desc", // 新しい投稿から順に表示
+      },
     });
     return res.status(200).json(posts);
   } catch (error) {
     console.log(error);
     return res.status(500).json({ message: "投稿の取得に失敗しました" });
+  }
+};
+
+export const getMyPosts = async (req, res) => {
+  try {
+    const myPosts = await prisma.fishingPost.findMany({
+      where: {
+        userId: req.userId,
+      },
+      include: {
+        user: true,
+        photos: true,
+      },
+      orderBy: {
+        createdAt: "desc", // 新しい投稿から順に表示
+      },
+    });
+    return res.status(200).json(myPosts);
+  } catch (error) {
+    console.log(error);
+    return res.status(500).json({ message: "自分の投稿の取得に失敗しました" });
   }
 };
 
@@ -255,7 +279,6 @@ export const searchPost = async (req, res) => {
     });
 
     return res.status(200).json(posts);
-
   } catch (error) {
     console.log(error);
     return res.status(500).json({ message: "投稿の検索に失敗しました" });

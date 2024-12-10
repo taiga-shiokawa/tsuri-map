@@ -1,12 +1,31 @@
 import bcrypt from "bcrypt";
 import prisma from "../lib/prisma.js";
 import jwt from "jsonwebtoken";
+import { sendWelcomeEmail } from "../emails/emailHandlers.js";
 
 export const register = async (req, res) => {
   const { name, email, password, age, gender } = req.body;
 
   try {
     const hashedPassword = await bcrypt.hash(password, 10);
+
+    if (!name || !email || !password || !age || !gender) {
+      return res.status(500).json({ message: "すべてのフィールドを入力してください" });
+    }
+
+    const existingUser = await prisma.user.findUnique({
+      where: {
+        email,
+      }
+    });
+
+    if (existingUser) {
+      return res.status(500).json({ message: "このメールアドレスは既に登録されています" });
+    };
+
+    if (password.length < 6) {
+      return res.status(400).json( { message: "パスワードは6文字以上にしてください。"} );
+    }
 
     const newUser = await prisma.user.create({
       data: {
@@ -39,10 +58,18 @@ export const register = async (req, res) => {
     .status(201)
     .json(userInfo);
 
+    const url = process.env.CLIENT_URL;
+    try {
+      await sendWelcomeEmail(newUser.email, newUser.name, url);
+    } catch (error) {
+      console.log("Welcomeメールの送信に失敗しました");
+      return res.status(500).json({ message: "Welcomeメールの送信に失敗しました" });
+    }
+
     console.log("New user created: ", newUser);
   } catch (error) {
     console.log(error);
-    res.status(500).json({ message: error.message });
+    return res.status(500).json({ message: error.message });
   }
 };
 

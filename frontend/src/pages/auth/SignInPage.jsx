@@ -1,8 +1,10 @@
-import { useState } from "react";
+import { useContext, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import apiRequest from "../../lib/apiRequest";
+import { AuthContext } from "../../context/AuthContext";
 
 const SignInPage = () => {
+  const { updateUser } = useContext(AuthContext);
   const [error, setError] = useState("");
   const [isLoading, setIsLoading] = useState(false);
   const navigate = useNavigate();
@@ -30,6 +32,7 @@ const SignInPage = () => {
       });
 
       console.log(res.data);
+      updateUser(res.data); // ここでAuthContextを更新
       navigate("/");
     } catch (error) {
       console.log("アカウント登録エラー: ", error);

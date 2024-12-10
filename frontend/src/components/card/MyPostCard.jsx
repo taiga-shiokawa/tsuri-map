@@ -1,7 +1,7 @@
-import { Link } from "react-router-dom";
-import FishingTypeDisplay from "../../utils/FishingTypeDisplay";
+import { Link } from "react-router-dom"
+import FishingTypeDisplay from "../../utils/FishingTypeDisplay"
 
-const PostCard = ({item}) => {
+const MyPostCard = ({item}) => {
   return (
     <div className="bg-white rounded-lg shadow-md p-4">
       <Link to={`/posts/${item.id}`}>
@@ -25,7 +25,7 @@ const PostCard = ({item}) => {
         </div>
       </Link>
     </div>
-  );
-};
+  )
+}
 
-export default PostCard;
+export default MyPostCard

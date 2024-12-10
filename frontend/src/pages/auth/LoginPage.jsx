@@ -96,7 +96,7 @@ const LoginPage = () => {
               </div>
 
               <a
-                href="#"
+                href="/forgot-password"
                 className="flex justify-end text-sm text-indigo-600 hover:text-indigo-500"
               >
                 パスワードを忘れた場合
