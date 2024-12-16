@@ -15,10 +15,11 @@ const LocationMarker = ({ onLocationSelect }) => {
 };
 
 const Map = ({ items = [], onLocationSelect, isSelectingLocation = false }) => {
+  const validItems = Array.isArray(items) ? items : [];  // 配列チェック
   const defaultPosition = [24.8055, 125.2811];
   
-  const position = items && items.length > 0 && items[0].location
-    ? [items[0].location.latitude, items[0].location.longitude]
+  const position = validItems.length > 0 && validItems[0]?.location?.latitude && validItems[0]?.location?.longitude
+    ? [validItems[0].location.latitude, validItems[0].location.longitude]
     : defaultPosition;
 
   return (
@@ -33,8 +34,8 @@ const Map = ({ items = [], onLocationSelect, isSelectingLocation = false }) => {
           attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
           url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
         />
-        {items.map(item => (
-          <Pin item={item} key={item.id} />
+        {validItems.map(item => (
+          item?.location ? <Pin item={item} key={item.id} /> : null
         ))}
         {isSelectingLocation && <LocationMarker onLocationSelect={onLocationSelect} />}
       </MapContainer>
