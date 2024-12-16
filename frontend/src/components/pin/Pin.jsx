@@ -21,12 +21,12 @@ const Pin = ({item}) => {
               {item.locationName}
             </a>
           </h3>
-          <p>魚種: {item.fishName}</p>
+          <p>{item.fishName}</p>
           <WeatherDisplay weather={item.weather} />
           <p className="mb-3"><FishingTypeDisplay fishingType={item.fishingType} /></p>
-          <p>日時: {new Date(item.fishingDate).toLocaleDateString()}</p>
+          <p>{new Date(item.fishingDate).toLocaleDateString()}</p>
           {item.description && (
-            <p className="mt-1">詳細: {item.description}</p>
+            <p className="mt-1">{item.description}</p>
           )}
         </div>
       </Popup>
