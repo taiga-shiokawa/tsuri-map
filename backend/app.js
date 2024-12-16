@@ -13,25 +13,29 @@ dotenv.config();
 
 const app = express();
 const PORT = process.env.PORT || 3000;
-
-const __filename = fileURLToPath(import.meta.url);
-const __dirname = path.dirname(__filename);
-
+const __dirname = path.resolve();
 
 app.use(cors({origin: process.env.CLIENT_URL, credentials: true}));
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(cookieParser());
 
-// app.use(express.static(path.join(__dirname, '../frontend/dist')));
-
-// app.get('*', (req, res) => {
-//   res.sendFile(path.join(__dirname, '../frontend/dist/index.html'));
-// });
-
 app.use("/api/auth", AuthRouter);
 app.use("/api/users", UserRouter);
 app.use("/api/posts", PostRouter);
+
+if (process.env.NODE_ENV === "production") {
+	app.use(express.static(path.join(__dirname, "/frontend/dist"), {
+    etag: false,
+    maxAge: 0,
+    lastModified: false
+  }));
+
+	app.get("*", (req, res) => {
+    res.set('Cache-Control', 'no-store');
+		res.sendFile(path.resolve(__dirname, "frontend", "dist", "index.html"));
+	});
+}
 
 app.listen(PORT, () => {
   console.log(`Example app listening on port ${PORT}`);
