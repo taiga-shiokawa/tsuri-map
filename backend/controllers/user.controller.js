@@ -1,7 +1,7 @@
 import { sendForgetPasswordEmail } from "../emails/emailHandlers.js";
 import prisma from "../lib/prisma.js";
 import jwt from "jsonwebtoken";
-import bcrypt from "bcrypt";
+import bcrypt from "bcryptjs";
 import multer from "multer";
 import { deleteFromCloudinary, uploadToCloudinary } from "../utils/storage.js";
 
