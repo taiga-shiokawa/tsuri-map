@@ -10,6 +10,7 @@ import PostRouter from "./routes/post.route.js";
 dotenv.config();
 
 const app = express();
+const PORT = process.env.PORT || process.env.TEST_PORT;
 
 app.use(cors({origin: process.env.CLIENT_URL, credentials: true}));
 app.use(express.json());
@@ -20,6 +21,6 @@ app.use("/api/auth", AuthRouter);
 app.use("/api/users", UserRouter);
 app.use("/api/posts", PostRouter);
 
-app.listen(process.env.TEST_PORT, () => {
-  console.log(`Example app listening on port ${process.env.TEST_PORT}`);
+app.listen(PORT, () => {
+  console.log(`Example app listening on port ${PORT}`);
 })
