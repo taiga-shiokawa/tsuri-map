@@ -6,7 +6,7 @@
   "type": "module",
   "scripts": {
     "dev": "nodemon backend/app.js",
-    "start": "node backend/app.js",
+    "start": "npm install && node backend/app.js",
     "test": "echo \"Error: no test specified\" && exit 1",
     "build": "npm install -g vite && npm install && npm install --prefix frontend && npm run build --prefix frontend && cd backend && npx prisma generate",
     "clean": "rm -rf frontend/dist",
