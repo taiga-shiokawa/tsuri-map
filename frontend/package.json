@@ -23,13 +23,14 @@
     "react-leaflet": "^4.2.1",
     "react-router-dom": "^6.28.0",
     "shadcn-ui": "^0.9.3",
-    "tailwind-merge": "^2.5.4"
+    "tailwind-merge": "^2.5.4",
+    "vite": "^5.4.10",
+    "@vitejs/plugin-react": "^4.3.3"
   },
   "devDependencies": {
     "@eslint/js": "^9.13.0",
     "@types/react": "^18.3.12",
     "@types/react-dom": "^18.3.1",
-    "@vitejs/plugin-react": "^4.3.3",
     "autoprefixer": "^10.4.20",
     "eslint": "^9.13.0",
     "eslint-plugin-react": "^7.37.2",
@@ -37,7 +38,6 @@
     "eslint-plugin-react-refresh": "^0.4.14",
     "globals": "^15.11.0",
     "postcss": "^8.4.49",
-    "tailwindcss": "^3.4.15",
-    "vite": "^5.4.10"
+    "tailwindcss": "^3.4.15"
   }
 }
