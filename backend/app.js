@@ -10,7 +10,7 @@ import PostRouter from "./routes/post.route.js";
 dotenv.config();
 
 const app = express();
-const PORT = process.env.PORT || process.env.TEST_PORT;
+const PORT = process.env.PORT || 3000;
 
 app.use(cors({origin: process.env.CLIENT_URL, credentials: true}));
 app.use(express.json());
