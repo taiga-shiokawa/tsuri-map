@@ -3,6 +3,7 @@ import cors from "cors";
 import dotenv from "dotenv";
 import express from "express";
 import path from "path";
+import prisma from "./lib/prisma.js";
 
 import AuthRouter from "./routes/auth.route.js";
 import UserRouter from "./routes/user.route.js";
@@ -40,6 +41,12 @@ if (process.env.NODE_ENV === "production") {
   });
 }
 
-app.listen(PORT, () => {
-  console.log(`Example app listening on port ${PORT}`);
+app.listen(PORT, async () => {
+  try {
+    await prisma.$connect();
+    console.log('Database connected successfully');
+  } catch (error) {
+    console.error('Database connection error:', error);
+  }
+  console.log(`Server running on port ${PORT}`);
 });
