@@ -14,7 +14,7 @@ const FishingTypeDisplay = ({ fishingType }) => {
 
   return (
     <p>
-      釣りの種類: {getFishingTypeInJapanese(fishingType)}
+      {getFishingTypeInJapanese(fishingType)}
     </p>
   );
 };

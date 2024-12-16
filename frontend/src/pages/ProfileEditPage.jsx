@@ -49,8 +49,20 @@ const ProfileEditPage = () => {
           <h1 className="text-2xl font-bold text-center mb-8">プロフィール</h1>
 
           {/* プロフィール画像 */}
-          <div className="flex justify-center mb-8">
-            <MaleOrFemale />
+          <div className="flex justify-center mb-4">
+            <div className="relative w-32 h-32">
+              {currentUser.profilePicture ? (
+                <img
+                  src={currentUser.profilePicture}
+                  alt="プロフィール"
+                  className="w-32 h-32 rounded-full object-cover"
+                />
+              ) : (
+                <div className="w-32 h-32 bg-sky-200 rounded-full">
+                  <MaleOrFemale />
+                </div>
+              )}
+            </div>
           </div>
 
           <form onSubmit={handleSubmit} className="space-y-6">

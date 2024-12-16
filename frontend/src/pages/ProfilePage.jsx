@@ -83,6 +83,7 @@ const ProfilePage = () => {
                     currentUser,
                     fishingPosts,
                   }}
+                  onUpdateUser={updateUser}
                 />
               </div>
               <MyPostList items={posts} />

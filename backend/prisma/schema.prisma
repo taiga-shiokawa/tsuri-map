@@ -23,6 +23,7 @@ model User {
   email         String       @unique
   password      String
   age           String
+  profilePicture String?
   gender        Gender
   createdAt     DateTime     @default(now())
   updatedAt     DateTime     @updatedAt

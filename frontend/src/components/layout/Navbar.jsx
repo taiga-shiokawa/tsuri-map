@@ -3,11 +3,12 @@ import apiRequest from "../../lib/apiRequest";
 import toast from "react-hot-toast";
 import { useContext, useState } from "react";
 import { AuthContext } from "../../context/AuthContext";
-import { Search } from "lucide-react";
+import { Calendar, Search } from "lucide-react";
 
 const Navbar = () => {
   const navigate = useNavigate();
   const [searchKeyword, setSearchKeyword] = useState("");
+  const [selectedMonth, setSelectedMonth] = useState("");
   const [isSearchFocused, setIsSearchFocused] = useState(false);
 
   const context = useContext(AuthContext);
@@ -30,21 +31,54 @@ const Navbar = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-  
+
     if (!searchKeyword.trim()) return;
-  
+
     try {
-      const res = await apiRequest.get(`/posts/search?search=${encodeURIComponent(searchKeyword.trim())}`);
-      
+      const res = await apiRequest.get(
+        `/posts/search?search=${encodeURIComponent(searchKeyword.trim())}`
+      );
+
       if (res.data.length === 0) {
         toast.info("検索結果が見つかりませんでした");
       }
-      
-      navigate("/", { 
+
+      navigate("/", {
         state: res.data,
-        replace: true // 履歴に残さない
+        replace: true, // 履歴に残さない
       });
       setSearchKeyword("");
+    } catch (error) {
+      console.error(error);
+      toast.error("検索結果がありませんでした");
+    }
+  };
+
+  const handleMonthSearch = async (e) => {
+    const month = e.target.value;
+    setSelectedMonth(month);
+
+    if (month === "all") {
+      const res = await apiRequest.get("/posts");
+      navigate("/", {
+        state: res.data,
+        replace: true,
+      });
+      return;
+    }
+
+    if (!month) return;
+
+    try {
+      const res = await apiRequest.get(`/posts/search/month/${month}`);
+      if (res.data.length === 0) {
+        toast.info(`${month}月の投稿は見つかりませんでした`);
+      }
+
+      navigate("/", {
+        state: res.data,
+        replace: true,
+      });
     } catch (error) {
       console.error(error);
       toast.error("検索結果がありませんでした");
@@ -59,7 +93,11 @@ const Navbar = () => {
             to="/"
             className="text-2xl font-bold text-blue-600 hover:text-blue-700 transition-colors"
           >
-            Logo
+            <img
+              src="https://res.cloudinary.com/dogup1dum/image/upload/v1734333189/tsurimap_vpz5sp.png"
+              alt="みゃ〜く釣りマップ"
+              className="h-10 w-auto" // ← このクラスを追加
+            />
           </Link>
 
           <form onSubmit={handleSubmit} className="relative flex items-center">
@@ -108,6 +146,30 @@ const Navbar = () => {
               検索
             </button>
           </form>
+
+          <div className="relative flex items-center">
+            <Calendar className="absolute left-3 w-5 h-5 text-gray-400" />
+            <select
+              value={selectedMonth}
+              onChange={handleMonthSearch}
+              className="
+                w-[120px] py-2 pl-10 pr-4
+                text-base font-normal
+                border border-gray-300 rounded-lg
+                bg-white text-gray-900
+                focus:outline-none focus:ring-2 focus:ring-blue-500
+                transition-all duration-200
+              "
+            >
+              <option value="">月</option>
+              <option value="all">すべて</option>
+              {Array.from({ length: 12 }, (_, i) => i + 1).map((month) => (
+                <option key={month} value={month}>
+                  {month}月
+                </option>
+              ))}
+            </select>
+          </div>
         </div>
 
         <nav>

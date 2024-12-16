@@ -18,7 +18,7 @@ const WeatherDisplay = ({ weather }) => {
 
   return (
     <p>
-      天気: {getWeatherInJapanese(weather)}
+      {getWeatherInJapanese(weather)}
     </p>
   );
 };

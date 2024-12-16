@@ -153,8 +153,8 @@ const HomePage = () => {
           </div>
           {user && user.currentUser && (
             <Dialog open={isOpen} onOpenChange={setIsOpen}>
-              <DialogContent className="sm:max-w-lg">
-                <DialogHeader className="space-y-3">
+              <DialogContent className="sm:max-w-lg max-h-[90vh] overflow-y-auto">
+                <DialogHeader className="space-y-3 sticky top-0 bg-white z-10 pb-4">
                   <DialogTitle className="text-2xl font-semibold">
                     新規投稿
                   </DialogTitle>
@@ -195,20 +195,16 @@ const HomePage = () => {
                         {isMapView && (
                           <LocationPickerMap
                             onLocationSelect={handleLocationSelect}
-                            selectedPosition={latitude && longitude ? { latitude, longitude } : null}
+                            selectedPosition={
+                              latitude && longitude
+                                ? { latitude, longitude }
+                                : null
+                            }
                           />
                         )}
                       </div>
-                      <input
-                        type="hidden"
-                        name="latitude"
-                        value={latitude}
-                      />
-                      <input
-                        type="hidden"
-                        name="longitude"
-                        value={longitude}
-                      />
+                      <input type="hidden" name="latitude" value={latitude} />
+                      <input type="hidden" name="longitude" value={longitude} />
                       {/* 残りのフォームフィールド */}
                       <input
                         type="date"
@@ -261,7 +257,7 @@ const HomePage = () => {
                         />
                       </div>
                     </div>
-                    <div className="mt-6 flex justify-end">
+                    <div className="sticky bottom-0 pt-4 pb-2 bg-white flex justify-end">
                       <button
                         type="submit"
                         className="px-6 py-2 bg-blue-500 text-white rounded-lg hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 transition-colors duration-200"

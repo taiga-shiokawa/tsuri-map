@@ -2,6 +2,8 @@ import { sendForgetPasswordEmail } from "../emails/emailHandlers.js";
 import prisma from "../lib/prisma.js";
 import jwt from "jsonwebtoken";
 import bcrypt from "bcrypt";
+import multer from "multer";
+import { deleteFromCloudinary, uploadToCloudinary } from "../utils/storage.js";
 
 export const currentUser = async (req, res) => {
   const userId = req.userId;
@@ -14,6 +16,7 @@ export const currentUser = async (req, res) => {
         email: true,
         age: true,
         gender: true,
+        profilePicture: true,
         createdAt: true,
         fishingPosts: true,
         savedPosts: true,
@@ -131,3 +134,92 @@ export const passwordReset = async (req, res) => {
     return res.status(500).json({ message: "パスワードの更新に失敗しました" });
   }
 }
+
+// 画像アップロード
+const upload = multer({
+  storage: multer.memoryStorage(),
+  limits: {
+    fileSize: 5 * 1024 * 1024,
+  },
+})
+
+export const userProfileEdit = async (req, res) => {
+  try {
+    upload.single('profileImage')(req, res, async (err) => {
+      if (err) {
+        return res.status(400).json({ message: "ファイルアップロードエラー" });
+      }
+
+      const userId = req.userId;
+
+      if (!userId) {
+        return res.status(401).json({ message: "認証されていません" });
+      }
+
+      // 現在のユーザー情報を取得
+      const currentUser = await prisma.user.findUnique({
+        where: { id: userId },
+        select: { profilePicture: true }
+      });
+
+      // 既存の画像がある場合は削除
+      if (currentUser?.profilePicture) {
+        try {
+          await deleteFromCloudinary(currentUser.profilePicture);
+        } catch (error) {
+          console.error("既存画像の削除エラー:", error);
+          // 既存画像の削除に失敗しても、新しい画像のアップロードは継続
+        }
+      }
+
+      // 新しい画像のアップロードとURLの取得
+      let profilePicture = null;
+      if (req.file) {
+        try {
+          profilePicture = await uploadToCloudinary(req.file);
+        } catch (error) {
+          console.error("画像アップロードエラー:", error);
+          return res.status(500).json({ message: "画像のアップロードに失敗しました" });
+        }
+      }
+
+      // ユーザープロフィールの更新
+      const updatedUser = await prisma.user.update({
+        where: {
+          id: userId
+        },
+        data: {
+          profilePicture
+        },
+        select: {
+          id: true,
+          name: true,
+          email: true,
+          about: true,
+          age: true,
+          gender: true,
+          profilePicture: true,
+          createdAt: true,
+          fishingPosts: {
+            include: {
+              user: {
+                select: {
+                  id: true,
+                  name: true,
+                  about: true
+                }
+              },
+              photos: true
+            }
+          },
+          savedPosts: true
+        }
+      });
+
+      return res.status(200).json(updatedUser);
+    });
+  } catch (error) {
+    console.error(error);
+    return res.status(500).json({ message: "プロフィール画像の更新に失敗しました" });
+  }
+};

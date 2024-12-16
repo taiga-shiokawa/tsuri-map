@@ -94,6 +94,12 @@ export const createPost = async (req, res) => {
         description,
       } = req.body;
 
+      if (!locationName || !latitude || !longitude || !fishingDate) {
+        return res
+          .status(400)
+          .json({ message: "必要な情報を入力してください" });
+      };
+
       const userId = req.userId;
 
       if (!userId) {
@@ -275,6 +281,45 @@ export const searchPost = async (req, res) => {
       },
       orderBy: {
         createdAt: "desc", // 新しい投稿から順に表示
+      },
+    });
+
+    return res.status(200).json(posts);
+  } catch (error) {
+    console.log(error);
+    return res.status(500).json({ message: "投稿の検索に失敗しました" });
+  }
+};
+
+export const searchPostsByMonth = async (req, res) => {
+  try {
+    const month = parseInt(req.params.month);
+
+    if (isNaN(month) || month < 1 || month > 12) {
+      return res.status(400).json({ message: "正しい月を入力してください" });
+    }
+
+    const posts = await prisma.fishingPost.findMany({
+      where: {
+        AND: [
+          {
+            fishingDate: {
+              gte: new Date(new Date().getFullYear(), month - 1, 1),
+            },
+          },
+          {
+            fishingDate: {
+              lt: new Date(new Date().getFullYear(), month, 1),
+            },
+          },
+        ],
+      },
+      include: {
+        user: true,
+        photos: true,
+      },
+      orderBy: {
+        fishingDate: 'desc',
       },
     });
 

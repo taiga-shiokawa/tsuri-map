@@ -86,7 +86,8 @@ export const login = async (req, res) => {
               select: {
                 id: true,
                 name: true,
-                about: true
+                about: true,
+                profilePicture: true
               }
             },
             photos: true
