@@ -10,6 +10,7 @@ import NotFoundPage from "./pages/NotFoundPage"
 import ForgetPassword from "./pages/ForgetPassword"
 import SetNewPasswordPage from "./pages/SetNewPasswordPage"
 import EmailSentConfirmation from "./components/info/EmailSentConfirmation"
+import OtherUserProfilePage from "./pages/OtherUserProfilePage"
 
 function App() {
   const router = createBrowserRouter([
@@ -57,13 +58,17 @@ function App() {
       element: <RequireAuth />,
       children: [
         {
+          path: "/profile/edit",
+          element: <ProfileEditPage />
+        },
+        {
+          path: "/profile/:userId",
+          element: <OtherUserProfilePage />
+        },
+        {
           path: "/profile",
           element: <ProfilePage />
         },
-        {
-          path: "/profile/edit",
-          element: <ProfileEditPage />
-        }
       ]
     }
   ]

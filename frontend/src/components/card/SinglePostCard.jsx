@@ -1,32 +1,33 @@
 import { useContext } from "react";
-import { useNavigate } from "react-router-dom";
-import { MapPin, CloudSun, Anchor, Clock, FileText, ExternalLink, Trash2 } from "lucide-react";
+import { Link, useNavigate } from "react-router-dom";
+import {
+  MapPin,
+  CloudSun,
+  Anchor,
+  Clock,
+  FileText,
+  ExternalLink,
+  Trash2,
+} from "lucide-react";
 import WeatherDisplay from "../../utils/WeatherDisplay";
 import UserInfo from "./UserInfo";
 import { AuthContext } from "../../context/AuthContext";
 import apiRequest from "../../lib/apiRequest";
 import FishingTypeDisplay from "../../utils/FishingTypeDisplay";
 
-const SinglePostCard = ({item}) => {
+const SinglePostCard = ({ item }) => {
   const { currentUser } = useContext(AuthContext);
   const navigate = useNavigate();
 
   const handleClick = () => {
-    const searchUrl = `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(item.location.latitude)},${encodeURIComponent(item.location.longitude)}`;
-    window.open(searchUrl, '_blank');
-  };
-
-  const handleProfileClick = (e) => {
-    e.preventDefault();
-    if (!currentUser) {
-      navigate(`/login?message=${encodeURIComponent("ログインしてください")}`);
-    } else {
-      navigate("/profile");
-    }
+    const searchUrl = `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(
+      item.location.latitude
+    )},${encodeURIComponent(item.location.longitude)}`;
+    window.open(searchUrl, "_blank");
   };
 
   const handleDelete = async () => {
-    if (window.confirm('この投稿を削除してもよろしいですか？')) {
+    if (window.confirm("この投稿を削除してもよろしいですか？")) {
       try {
         await apiRequest.delete(`/posts/delete/${item.id}`);
         navigate("/");
@@ -40,8 +41,18 @@ const SinglePostCard = ({item}) => {
     <div className="space-y-4">
       {/* User Info Card */}
       <div className="bg-white rounded-lg shadow-sm p-6">
-        <div onClick={handleProfileClick} className="cursor-pointer">
-          <UserInfo item={item} />
+        <div className="cursor-pointer">
+          {currentUser.id === item.userId ? (
+            // 自分自身の投稿の場合
+            <Link to="/profile">
+              <UserInfo item={item} />
+            </Link>
+          ) : (
+            // 他のユーザーの投稿の場合
+            <Link to={`/profile/${item.userId}`}>
+              <UserInfo item={item} />
+            </Link>
+          )}
         </div>
       </div>
 
@@ -49,11 +60,9 @@ const SinglePostCard = ({item}) => {
       <div className="bg-white rounded-lg shadow-sm p-6">
         {/* Header Section */}
         <div className="flex justify-between items-start mb-6">
-          <h2 className="text-2xl font-bold text-gray-900">
-            {item.fishName}
-          </h2>
+          <h2 className="text-2xl font-bold text-gray-900">{item.fishName}</h2>
           <div className="flex gap-2">
-            <button 
+            <button
               onClick={handleClick}
               className="bg-blue-500 hover:bg-blue-600 text-white px-4 py-2 rounded-lg flex items-center gap-2 text-sm transition-colors"
             >
@@ -61,7 +70,7 @@ const SinglePostCard = ({item}) => {
               ここに行く
             </button>
             {currentUser && currentUser.id === item.userId && (
-              <button 
+              <button
                 onClick={handleDelete}
                 className="bg-red-500 hover:bg-red-600 text-white px-4 py-2 rounded-lg flex items-center gap-2 text-sm transition-colors"
               >

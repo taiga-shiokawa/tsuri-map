@@ -223,3 +223,42 @@ export const userProfileEdit = async (req, res) => {
     return res.status(500).json({ message: "プロフィール画像の更新に失敗しました" });
   }
 };
+
+export const userProfile = async (req, res) => {
+  const userId = req.params.id;
+  try {
+    // userId の存在チェックを追加
+    if (!userId) {
+      return res.status(400).json({ message: "ユーザーIDが必要です" });
+    }
+
+    const user = await prisma.user.findUnique({
+      where: { id: userId },
+      select: {
+        id: true,
+        name: true,
+        email: true,
+        age: true,
+        gender: true,
+        profilePicture: true,
+        createdAt: true,
+        fishingPosts: true,
+        savedPosts: true,
+        about: true,
+      },
+      
+    });
+
+    console.log(user);
+
+    // ユーザーが見つからない場合のハンドリングを追加
+    if (!user) {
+      return res.status(404).json({ message: "ユーザーが見つかりません" });
+    }
+
+    return res.status(200).json(user);
+  } catch (error) {
+    console.error(error);
+    return res.status(500).json({ message: "プロフィール情報の取得に失敗しました" });
+  }
+}

@@ -1,8 +1,9 @@
-import { Navigate, Outlet } from "react-router-dom";
+import { Navigate, Outlet, useNavigate } from "react-router-dom";
 import Navbar from "./Navbar";
 import Footer from "./Footer";
-import { useContext } from "react";
+import { useContext, useEffect } from "react";
 import { AuthContext } from "../../context/AuthContext";
+import toast from "react-hot-toast";
 
 const Layout = () => {
   return (
@@ -20,6 +21,22 @@ const Layout = () => {
 
 const RequireAuth = () => {
   const { currentUser } = useContext(AuthContext);
+  const navigate = useNavigate();
+
+  useEffect(() => {
+    if (!currentUser) {
+      toast.error("ログインしてください", {
+        duration: 3000
+      });
+      setTimeout(() => {
+        navigate("/");
+      }, 1000);
+    }
+  }, [currentUser, navigate]);
+
+  if (!currentUser) {
+    return null;
+  }
 
   return !currentUser ? (
     <Navigate to="/" />

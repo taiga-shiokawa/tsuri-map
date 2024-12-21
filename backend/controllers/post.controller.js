@@ -329,3 +329,37 @@ export const searchPostsByMonth = async (req, res) => {
     return res.status(500).json({ message: "投稿の検索に失敗しました" });
   }
 };
+
+export const getUserPosts = async (req, res) => {
+  const userId = req.params.id;
+  try {
+    // userId の存在チェックを追加
+    if (!userId) {
+      return res.status(400).json({ message: "ユーザーIDが必要です" });
+    }
+
+    const myPosts = await prisma.fishingPost.findMany({
+      where: {
+        userId: userId,
+      },
+      include: {
+        user: {
+          select: {
+            id: true,
+            name: true,
+            profilePicture: true,
+          }
+        },
+        photos: true,
+      },
+      orderBy: {
+        createdAt: "desc",
+      },
+    });
+
+    return res.status(200).json(myPosts);
+  } catch (error) {
+    console.error(error);  // console.log から console.error に変更
+    return res.status(500).json({ message: "投稿の取得に失敗しました" });
+  }
+}
