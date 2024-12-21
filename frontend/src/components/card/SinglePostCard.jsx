@@ -42,7 +42,7 @@ const SinglePostCard = ({ item }) => {
       {/* User Info Card */}
       <div className="bg-white rounded-lg shadow-sm p-6">
         <div className="cursor-pointer">
-          {currentUser.id === item.userId ? (
+          {currentUser?.id === item.userId ? (
             // 自分自身の投稿の場合
             <Link to="/profile">
               <UserInfo item={item} />
