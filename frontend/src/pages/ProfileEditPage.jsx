@@ -4,6 +4,7 @@ import { Link, useNavigate } from "react-router-dom";
 import MaleOrFemale from "../components/ui/MaleOrFemale";
 import toast, { Toaster } from "react-hot-toast";
 import apiRequest from "../lib/apiRequest";
+import LinkedText from "../utils/LinkedText";
 
 const ProfileEditPage = () => {
   const { currentUser, updateUser } = useContext(AuthContext);
@@ -27,7 +28,7 @@ const ProfileEditPage = () => {
         setTimeout(() => {
           navigate("/profile");
         }, 1000);
-      };
+      }
     } catch (error) {
       console.log(error);
       toast.error("プロフィールの更新に失敗しました");
@@ -92,6 +93,18 @@ const ProfileEditPage = () => {
                 rows={4}
                 className="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
               />
+
+              {/* プレビューエリアを追加 */}
+              {about && (
+                <div className="mt-4">
+                  <h4 className="text-sm font-medium text-gray-700">
+                    プレビュー
+                  </h4>
+                  <div className="mt-2 p-3 bg-gray-50 rounded-md">
+                    <LinkedText text={about} />
+                  </div>
+                </div>
+              )}
             </div>
 
             {/* 更新ボタン */}

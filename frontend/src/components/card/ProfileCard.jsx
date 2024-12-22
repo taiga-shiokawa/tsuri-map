@@ -4,6 +4,7 @@ import MaleOrFemale from "../ui/MaleOrFemale";
 import { useState } from "react";
 import toast from "react-hot-toast";
 import apiRequest from "../../lib/apiRequest";
+import LinkedText from "../../utils/LinkedText";
 
 const ProfileCard = ({ user, onUpdateUser }) => {
   const [isUploading, setIsUploading] = useState(false);
@@ -114,7 +115,9 @@ const ProfileCard = ({ user, onUpdateUser }) => {
       {/* 自己紹介セクション */}
       <div className="mb-6">
         <h3 className="text-lg font-bold text-center mb-2">自己紹介</h3>
-        <p className="text-center text-gray-700">{user.currentUser.about}</p>
+        <div className="text-center text-gray-700">
+          <LinkedText text={user.currentUser.about} />
+        </div>
       </div>
     </div>
   );
