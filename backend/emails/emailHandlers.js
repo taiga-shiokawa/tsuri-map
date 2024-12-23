@@ -42,7 +42,7 @@ export const sendWelcomeEmail = async (email, name, url) => {
       from: `${sender.name} <${sender.email}>`,
       to: [getEmailAddress(email)],
       subject: "みゃーく釣りマップへようこそ",
-      html: createWelcomeEmailTemplate(url),
+      html: createWelcomeEmailTemplate(name, url),
       tags: [{ name: "category", value: "Welcome" }],
       // 本番環境のみreply-toを設定
       ...(IS_PRODUCTION && { 
