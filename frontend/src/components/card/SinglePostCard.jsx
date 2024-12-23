@@ -38,17 +38,15 @@ const SinglePostCard = ({ item }) => {
   };
 
   return (
-    <div className="space-y-4">
+    <div className="max-w-3xl mx-auto px-4 py-6 space-y-4">
       {/* User Info Card */}
-      <div className="bg-white rounded-lg shadow-sm p-6">
+      <div className="bg-white rounded-lg shadow-sm p-4 sm:p-6">
         <div className="cursor-pointer">
           {currentUser?.id === item.userId ? (
-            // 自分自身の投稿の場合
             <Link to="/profile">
               <UserInfo item={item} />
             </Link>
           ) : (
-            // 他のユーザーの投稿の場合
             <Link to={`/profile/${item.userId}`}>
               <UserInfo item={item} />
             </Link>
@@ -57,46 +55,48 @@ const SinglePostCard = ({ item }) => {
       </div>
 
       {/* Main Content Card */}
-      <div className="bg-white rounded-lg shadow-sm p-6">
+      <div className="bg-white rounded-lg shadow-sm p-4 sm:p-6">
         {/* Header Section */}
-        <div className="flex justify-between items-start mb-6">
-          <h2 className="text-2xl font-bold text-gray-900">{item.fishName}</h2>
-          <div className="flex gap-2">
+        <div className="flex flex-col sm:flex-row sm:justify-between sm:items-center gap-4 mb-6">
+          <h2 className="text-xl sm:text-2xl font-bold text-gray-900 break-all">
+            {item.fishName}
+          </h2>
+          <div className="flex gap-2 w-full sm:w-auto">
             <button
               onClick={handleClick}
-              className="bg-blue-500 hover:bg-blue-600 text-white px-4 py-2 rounded-lg flex items-center gap-2 text-sm transition-colors"
+              className="flex-1 sm:flex-none bg-blue-500 hover:bg-blue-600 text-white px-4 py-2 rounded-lg flex items-center justify-center gap-2 text-sm transition-colors"
             >
               <ExternalLink className="w-4 h-4" />
-              ここに行く
+              <span>ここに行く</span>
             </button>
             {currentUser && currentUser.id === item.userId && (
               <button
                 onClick={handleDelete}
-                className="bg-red-500 hover:bg-red-600 text-white px-4 py-2 rounded-lg flex items-center gap-2 text-sm transition-colors"
+                className="flex-1 sm:flex-none bg-red-500 hover:bg-red-600 text-white px-4 py-2 rounded-lg flex items-center justify-center gap-2 text-sm transition-colors"
               >
                 <Trash2 className="w-4 h-4" />
-                削除
+                <span>削除</span>
               </button>
             )}
           </div>
         </div>
 
         {/* Info Grid */}
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-6">
-          <div className="flex items-center gap-3 text-gray-600">
-            <MapPin className="w-5 h-5 text-gray-400" />
-            <span>{item.locationName}</span>
+        <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 mb-6">
+          <div className="flex items-center gap-3 text-gray-600 bg-gray-50 p-3 rounded-lg">
+            <MapPin className="w-5 h-5 text-gray-400 shrink-0" />
+            <span className="break-all">{item.locationName}</span>
           </div>
-          <div className="flex items-center gap-3 text-gray-600">
-            <CloudSun className="w-5 h-5 text-gray-400" />
+          <div className="flex items-center gap-3 text-gray-600 bg-gray-50 p-3 rounded-lg">
+            <CloudSun className="w-5 h-5 text-gray-400 shrink-0" />
             <WeatherDisplay weather={item.weather} />
           </div>
-          <div className="flex items-center gap-3 text-gray-600">
-            <Anchor className="w-5 h-5 text-gray-400" />
+          <div className="flex items-center gap-3 text-gray-600 bg-gray-50 p-3 rounded-lg">
+            <Anchor className="w-5 h-5 text-gray-400 shrink-0" />
             <FishingTypeDisplay fishingType={item.fishingType} />
           </div>
-          <div className="flex items-center gap-3 text-gray-600">
-            <Clock className="w-5 h-5 text-gray-400" />
+          <div className="flex items-center gap-3 text-gray-600 bg-gray-50 p-3 rounded-lg">
+            <Clock className="w-5 h-5 text-gray-400 shrink-0" />
             <time>{new Date(item.fishingDate).toLocaleDateString()}</time>
           </div>
         </div>
@@ -105,10 +105,10 @@ const SinglePostCard = ({ item }) => {
         {item.description && (
           <div className="mb-6 border-t border-gray-100 pt-4">
             <div className="flex items-center gap-2 text-gray-600 mb-2">
-              <FileText className="w-5 h-5 text-gray-400" />
+              <FileText className="w-5 h-5 text-gray-400 shrink-0" />
               <span className="font-medium">詳細</span>
             </div>
-            <p className="text-gray-600 whitespace-pre-line pl-7">
+            <p className="text-gray-600 whitespace-pre-line pl-4 sm:pl-7 break-all">
               {item.description}
             </p>
           </div>
@@ -119,12 +119,13 @@ const SinglePostCard = ({ item }) => {
           <div className="border-t border-gray-100 pt-4">
             <div className="space-y-4">
               {item.photos.map((photo, index) => (
-                <img
-                  key={index}
-                  src={photo.url}
-                  alt="釣果"
-                  className="w-full rounded-lg object-cover shadow-sm"
-                />
+                <div key={index} className="aspect-w-16 aspect-h-9">
+                  <img
+                    src={photo.url}
+                    alt="釣果"
+                    className="w-full rounded-lg object-contain bg-gray-50"
+                  />
+                </div>
               ))}
             </div>
           </div>

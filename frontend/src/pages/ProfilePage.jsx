@@ -6,18 +6,19 @@ import Map from "../components/map/Map";
 import toast, { Toaster } from "react-hot-toast";
 import apiRequest from "../lib/apiRequest";
 import MyPostList from "../components/list/MyPostList";
+import { Map as MapIcon, List } from "lucide-react";
 
 const ProfilePage = () => {
   const { currentUser, updateUser, fishingPosts } = useContext(AuthContext);
   const navigate = useNavigate();
   const [posts, setPosts] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
+  const [showMap, setShowMap] = useState(false);
 
   const fetchPosts = async () => {
     setIsLoading(true);
     try {
       const res = await apiRequest.get("/posts/myPosts");
-      console.log("my-posts", res.data);
       setPosts(res.data);
     } catch (error) {
       console.log(error);
@@ -31,7 +32,6 @@ const ProfilePage = () => {
     fetchPosts();
   }, []);
 
-  // ユーザー情報を取得
   useEffect(() => {
     const fetchUser = async () => {
       try {
@@ -48,9 +48,8 @@ const ProfilePage = () => {
     };
 
     fetchUser();
-  }, []); // 依存配列を空にして初回のみ実行
+  }, []);
 
-  // 未認証ユーザーのリダイレクト
   useEffect(() => {
     if (!isLoading && !currentUser) {
       toast.error("ログインしてください");
@@ -60,8 +59,8 @@ const ProfilePage = () => {
 
   if (isLoading) {
     return (
-      <div className="min-h-screen flex items-center justify-center">
-        <div className="text-lg">読み込み中...</div>
+      <div className="min-h-screen flex items-center justify-center bg-gray-100">
+        <div className="animate-spin h-8 w-8 border-4 border-blue-500 rounded-full border-t-transparent"></div>
       </div>
     );
   }
@@ -72,24 +71,57 @@ const ProfilePage = () => {
 
   return (
     <>
-    <Toaster position="top-center" />
+      <Toaster position="top-center" />
       <div className="min-h-screen bg-gray-100">
-        <div className="mx-auto max-w-7xl">
-          <div className="flex flex-col md:flex-row">
-            <div className="w-full md:w-3/6 p-4 overflow-auto h-screen">
-              <div className="mb-5">
-                <ProfileCard
-                  user={{
-                    currentUser,
-                    fishingPosts,
-                  }}
-                  onUpdateUser={updateUser}
-                />
+        <div className="mx-auto max-w-7xl px-4">
+          {/* モバイルでの切り替えボタン */}
+          <div className="md:hidden sticky top-0 z-20 bg-gray-100 pt-4 pb-2">
+            <button
+              onClick={() => setShowMap(!showMap)}
+              className="w-full flex items-center justify-center gap-2 px-4 py-2 bg-blue-500 text-white rounded-lg hover:bg-blue-600 transition-colors duration-200"
+            >
+              {showMap ? (
+                <>
+                  <List className="w-5 h-5" />
+                  投稿一覧を表示
+                </>
+              ) : (
+                <>
+                  <MapIcon className="w-5 h-5" />
+                  地図を表示
+                </>
+              )}
+            </button>
+          </div>
+
+          <div className="flex flex-col md:flex-row md:space-x-4">
+            {/* プロフィールと投稿一覧 */}
+            <div className={`w-full md:w-1/2 ${showMap ? 'hidden' : 'block'} md:block`}>
+              <div className="py-4">
+                <div className="bg-white rounded-lg shadow mb-4">
+                  <ProfileCard
+                    user={{
+                      currentUser,
+                      fishingPosts,
+                    }}
+                    onUpdateUser={updateUser}
+                  />
+                </div>
+                <div className="mt-4">
+                  <MyPostList items={posts} />
+                </div>
               </div>
-              <MyPostList items={posts} />
             </div>
-            <div className="w-full md:w-3/6 p-4 overflow-auto h-screen">
-              <Map items={fishingPosts} />
+
+            {/* 地図 */}
+            <div 
+              className={`w-full md:w-1/2 ${!showMap ? 'hidden' : 'block'} md:block sticky top-0`}
+            >
+              <div className="h-[calc(100vh-5rem)] md:h-screen py-4">
+                <div className="h-full rounded-lg overflow-hidden">
+                  <Map items={fishingPosts} />
+                </div>
+              </div>
             </div>
           </div>
         </div>
