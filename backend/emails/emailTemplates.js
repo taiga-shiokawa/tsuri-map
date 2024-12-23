@@ -9,7 +9,7 @@ export function createWelcomeEmailTemplate(name, url) {
   </head>
   <body style="font-family: Arial, sans-serif; line-height: 1.6; color: #333; max-width: 600px; margin: 0 auto; padding: 20px;">
     <div style="background: #5fced8; padding: 30px; text-align: center; border-radius: 10px 10px 0 0;">
-      <h1 style="color: white; margin: 0; font-size: 28px;">みゃーく釣りマップへようこそ！</h1>
+      <h1 style="color: white; margin: 0; font-size: 28px;">みゃ〜く釣りマップへようこそ！</h1>
     </div>
     <div style="background-color: #ffffff; padding: 30px; border-radius: 0 0 10px 10px; box-shadow: 0 4px 10px rgba(0,0,0,0.1);">
       <p style="font-size: 18px; color: #000000;"><strong>${name}様</strong></p>

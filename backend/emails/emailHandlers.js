@@ -19,7 +19,7 @@ const DEV_SENDER = {
 // 本番環境用の送信者情報
 const PROD_SENDER = {
   email: process.env.EMAIL_FROM,
-  name: 'みゃーく釣りマップ'
+  name: 'みゃ〜く釣りマップ'
 };
 
 // 環境に応じて送信者情報を切り替え
@@ -72,7 +72,7 @@ export const sendForgetPasswordEmail = async (email, url) => {
     const response = await resend.emails.send({
       from: `${sender.name} <${sender.email}>`,
       to: [getEmailAddress(email)],
-      subject: "みゃーく釣りマップ パスワード再設定",
+      subject: "みゃ〜く釣りマップ パスワード再設定",
       html: createForgetPasswordEmailTemplate(url),
       tags: [{ name: "category", value: "PasswordReset" }],
       // 本番環境のみreply-toを設定
