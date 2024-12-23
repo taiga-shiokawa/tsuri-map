@@ -41,7 +41,7 @@ export const sendWelcomeEmail = async (email, name, url) => {
     const response = await resend.emails.send({
       from: `${sender.name} <${sender.email}>`,
       to: [getEmailAddress(email)],
-      subject: "みゃーく釣りマップへようこそ",
+      subject: "みゃ〜く釣りマップへようこそ",
       html: createWelcomeEmailTemplate(name, url),
       tags: [{ name: "category", value: "Welcome" }],
       // 本番環境のみreply-toを設定

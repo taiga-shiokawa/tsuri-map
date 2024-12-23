@@ -5,7 +5,7 @@ export function createWelcomeEmailTemplate(name, url) {
   <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>みゃーく釣りマップへようこそ</title>
+    <title>みゃ〜く釣りマップへようこそ</title>
   </head>
   <body style="font-family: Arial, sans-serif; line-height: 1.6; color: #333; max-width: 600px; margin: 0 auto; padding: 20px;">
     <div style="background: #5fced8; padding: 30px; text-align: center; border-radius: 10px 10px 0 0;">
@@ -19,7 +19,7 @@ export function createWelcomeEmailTemplate(name, url) {
       </div>
       <p>ご不明な点やお困りのことがございましたら、サポートチームが常時対応させていただきます。</p>
       <p>※このメールに心当たりがない場合は、無視していただいて構いません。</p><br
-      <p>よろしくお願いいたします。<br>みゃーく釣りマップチーム</p>
+      <p>よろしくお願いいたします。<br>みゃ〜く釣りマップチーム</p>
     </div>
   </body>
   </html>
@@ -33,11 +33,11 @@ export function createForgetPasswordEmailTemplate(url) {
   <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>みゃーく釣りマップへようこそ</title>
+    <title>みゃ〜く釣りマップへようこそ</title>
   </head>
   <body style="font-family: Arial, sans-serif; line-height: 1.6; color: #333; max-width: 600px; margin: 0 auto; padding: 20px;">
     <div style="background: #5fced8; padding: 30px; text-align: center; border-radius: 10px 10px 0 0;">
-      <h1 style="color: white; margin: 0; font-size: 28px;">みゃーく釣りマップへようこそ！</h1>
+      <h1 style="color: white; margin: 0; font-size: 28px;">みゃ〜く釣りマップへようこそ！</h1>
     </div>
     <div style="background-color: #ffffff; padding: 30px; border-radius: 0 0 10px 10px; box-shadow: 0 4px 10px rgba(0,0,0,0.1);">
       <p>パスワードの再設定を行ってください。</p>
@@ -46,7 +46,7 @@ export function createForgetPasswordEmailTemplate(url) {
       </div>
       <p>ご不明な点やお困りのことがございましたら、サポートチームが常時対応させていただきます。</p>
       <p>※このメールに心当たりがない場合は、無視していただいて構いません。</p><br
-      <p>よろしくお願いいたします。<br>みゃーく釣りマップチーム</p>
+      <p>よろしくお願いいたします。<br>みゃ〜く釣りマップチーム</p>
     </div>
   </body>
   </html>
