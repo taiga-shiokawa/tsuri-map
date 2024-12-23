@@ -136,7 +136,7 @@ const LoginPage = () => {
           {/* 右側の画像部分 */}
           <div className="hidden md:block w-1/2 bg-gray-100">
             <img
-              src="tsuri.jpeg"
+              src="https://res.cloudinary.com/dogup1dum/image/upload/v1734968405/IMG_9053_lwmbof.jpg"
               alt="Office desk with laptop"
               className="object-cover w-full h-full"
             />
