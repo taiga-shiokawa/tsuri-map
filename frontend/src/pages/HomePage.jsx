@@ -130,7 +130,11 @@ const HomePage = () => {
 
           <div className="flex flex-col md:flex-row md:space-x-4">
             {/* 投稿一覧 */}
-            <div className={`w-full md:w-1/2 ${showMap ? 'hidden' : 'block'} md:block`}>
+            <div
+              className={`w-full md:w-1/2 ${
+                showMap ? "hidden" : "block"
+              } md:block`}
+            >
               <div className="relative">
                 <PostList items={posts} />
                 {user && user.currentUser && (
@@ -158,7 +162,11 @@ const HomePage = () => {
             </div>
 
             {/* 地図 */}
-            <div className={`w-full md:w-1/2 h-[calc(100vh-6rem)] md:h-auto ${!showMap ? 'hidden' : 'block'} md:block sticky top-16 md:top-4`}>
+            <div
+              className={`w-full md:w-1/2 h-[calc(100vh-6rem)] md:h-auto ${
+                !showMap ? "hidden" : "block"
+              } md:block sticky top-16 md:top-4`}
+            >
               <Map items={posts} />
             </div>
           </div>
@@ -166,8 +174,8 @@ const HomePage = () => {
           {/* 投稿ダイアログ */}
           {user && user.currentUser && (
             <Dialog open={isOpen} onOpenChange={setIsOpen}>
-              <DialogContent className="sm:max-w-lg max-h-[90vh] overflow-y-auto mx-4">
-                <DialogHeader className="space-y-3 sticky top-0 bg-white z-10 pb-4">
+              <DialogContent className="sm:max-w-lg max-h-[90vh] overflow-y-auto">
+                <DialogHeader className="space-y-3 sticky top-0 z-10 pb-4 pr-14">
                   <DialogTitle className="text-xl md:text-2xl font-semibold">
                     新規投稿
                   </DialogTitle>
