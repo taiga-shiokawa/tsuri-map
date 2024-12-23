@@ -9,7 +9,7 @@ const Footer = () => {
             {/* ロゴとコピーライト */}
             <div className="flex items-center">
               <span className="text-sm text-gray-500 whitespace-nowrap">
-                みゃーく釣りマップ © 2024
+                みゃ〜く釣りマップ © 2024
               </span>
             </div>
 
